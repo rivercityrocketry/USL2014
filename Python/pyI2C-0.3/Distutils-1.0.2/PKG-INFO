@@ -1,0 +1,13 @@
+Metadata-Version: 1.0
+Name: Distutils
+Version: 1.0.2
+Summary: Python Distribution Utilities
+Home-page: http://www.python.org/sigs/distutils-sig/
+Author: A.M. Kuchling
+Author-email: amk1@bigfoot.com
+License: Python
+Description: A collection of modules to aid in the distribution and installation of
+        Python modules, extensions, and (ultimately) applications.  A standard
+        part of Python 1.6 and 2.0, but also distributed separately for use with
+        Python 1.5.
+Platform: UNKNOWN
