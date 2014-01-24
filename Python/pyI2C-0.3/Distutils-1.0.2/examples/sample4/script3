@@ -1,7 +1,0 @@
-#! /usr/local/bin/python -u
-import sys
-sys.stdout.write("un")
-sys.stderr.write("buf")
-sys.stdout.write("fer")
-sys.stderr.write("ed")
-sys.stdout.write("\n")
