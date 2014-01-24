@@ -1,14 +1,46 @@
-#include <stdio.h>
+#include <Wire.h>
+#include <ADXL345.h>
 
-void setup() {
+const float alpha = 0.5;
+ 
+double fXg = 0;
+double fYg = 0;
+double fZg = 0;
+ 
+ADXL345 acc;
+ 
+void setup()
+{
+    acc.begin();
+    Serial.begin(9600);
+    delay(100);
+}
+ 
+void loop()
+{
+    double pitch, roll, Xg, Yg, Zg;
+    acc.read(&Xg, &Yg, &Zg);
+ 
+    //Low Pass Filter
+    fXg = Xg * alpha + (fXg * (1.0 - alpha));
+    fYg = Yg * alpha + (fYg * (1.0 - alpha));
+    fZg = Zg * alpha + (fZg * (1.0 - alpha));
+ 
+    //Roll & Pitch Equations
+    roll  = (atan2(-fYg, fZg)*180.0)/M_PI;
+    pitch = (atan2(fXg, sqrt(fYg*fYg + fZg*fZg))*180.0)/M_PI;
+ 
+    Serial.print(pitch);
+    Serial.print(":");
+    Serial.println(roll);
+ 
+    delay(10);
 }
 
-void loop() {
-   printf("Testing");
-}
 /*
 // The SPI library is used for...SPI communication.
 #include <SPI.h>
+
 // Accept chip siganls on pin 10.
 int CS=10;
 
@@ -38,6 +70,7 @@ void setup() {
     
   //Set up the Chip Select pin to be an output from the Arduino.
   pinMode(CS, OUTPUT);
+  
   //Before communication starts, the Chip Select pin needs to be set high.
   digitalWrite(CS, HIGH);
   
@@ -66,7 +99,7 @@ void loop() {
   Serial.print(y, DEC);
   Serial.print(',');
   Serial.println(z, DEC);      
-  delay(10); 
+  delay(100);
 }
 
 //This function will write a value to a register on the ADXL345.
@@ -100,8 +133,54 @@ void readRegister(char registerAddress, int numBytes, char * values){
   //Transfer the starting register address that needs to be read.
   SPI.transfer(address);
   //Continue to read registers until we've read the number specified, storing the results to the input buffer.
-  while (SPI.transfer(0x00)) {} //  for(int SPI.transfer(0x00));
+  for (int i = 0; i <
+  while (SPI.transfer(0x00))
+//  for(int  SPI.transfer(0x00));
+//  }
   //Set the Chips Select pin high to end the SPI packet.
   digitalWrite(CS, HIGH);
 }
-*/
+/*void readRegister(char registerAddress, int numBytes, char * values){
+  //Since we're performing a read operation, the most significant bit of the register address should be set.
+  char address = 0x80 | registerAddress;
+  //If we're doing a multi-byte read, bit 6 needs to be set as well.
+  if(numBytes > 1)address = address | 0x40;
+  
+  //Set the Chip select pin low to start an SPI packet.
+  digitalWrite(CS, LOW);
+  //Transfer the starting register address that needs to be read.
+  SPI.transfer(address);
+  //Continue to read registers until we've read the number specified, storing the results to the input buffer.
+  while (SPI.transfer(0x00)) {} //  for(int SPI.transfer(0x00));
+  //Set the Chips Select pin high to end the SPI packet.
+  digitalWrite(CS, HIGH);
+}*/
+
+
+
+//void setup() {
+//    Serial.begin(9600);
+//    Serial.print("Setup");
+//}
+
+//void loop() {
+//  Serial.print("Testing");
+//  delay(1000);
+/*  int altitudePassed;
+  
+  altitudePassed = readSensor();
+  
+  if (altitudePassed == 1) {
+    int tiltThresholdPassed;
+    
+    tiltThresholdPassed = isThresholdPassed();
+    
+    if (tiltThresholdPassed == 0) {
+      fireSecondaryEngine();
+    }
+    
+    // Exit the program after we've either fired the secondary 
+    // engine or not, so that we don't continue to try firing it.
+    return;
+  }*/
+//}
