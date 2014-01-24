@@ -1,0 +1,20 @@
+The usage instructions that were formerly in this file are obsolete and
+have been (mostly) replaced by the two Distutils manuals, both included
+in the Distutils source distribution:
+
+    "Installing Python Modules"      doc/inst/inst.tex
+    "Distributing Python Modules"    doc/dist/dist.tex
+
+If you don't feel like wrestling LaTeX and the Python documentation
+tools into submission, you can find PDF, PostScript, and HTML versions
+of these manuals at the Distutils documentation page:
+
+    http://www.python.org/sigs/distutils-sig/doc/
+
+Not all of the information that was formerly in this file is in those
+manuals yet, but I'm working on it!  Contributions (in the form of
+patches to the LaTeX source) are welcome.
+
+Mail documentation patches to me: Greg Ward <gward@python.net>
+
+$Id: USAGE.txt,v 1.6 2000/04/12 01:40:04 gward Exp $
