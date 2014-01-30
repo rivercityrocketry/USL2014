@@ -1,0 +1,5 @@
+C:\Users\Daniel\Desktop\USLI\2013-2014\codeRepository\USL2014\tiltometer\Calibration Tool\ArduinoSerialInterface\ArduinoSerialInterface\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Daniel\Desktop\USLI\2013-2014\codeRepository\USL2014\tiltometer\Calibration Tool\ArduinoSerialInterface\ArduinoSerialInterface\bin\Debug\ArduinoSerialInterface.exe
+C:\Users\Daniel\Desktop\USLI\2013-2014\codeRepository\USL2014\tiltometer\Calibration Tool\ArduinoSerialInterface\ArduinoSerialInterface\bin\Debug\ArduinoSerialInterface.pdb
+C:\Users\Daniel\Desktop\USLI\2013-2014\codeRepository\USL2014\tiltometer\Calibration Tool\ArduinoSerialInterface\ArduinoSerialInterface\obj\x86\Debug\ArduinoSerialInterface.exe
+C:\Users\Daniel\Desktop\USLI\2013-2014\codeRepository\USL2014\tiltometer\Calibration Tool\ArduinoSerialInterface\ArduinoSerialInterface\obj\x86\Debug\ArduinoSerialInterface.pdb

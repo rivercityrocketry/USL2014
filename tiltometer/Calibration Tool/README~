@@ -1,0 +1,7 @@
+================
+Calibration Tool
+================
+==Purpose==
+This set of tools will assist us in debugging the tiltometer, by
+allowing us to read data from the Arduino into the host computer,
+and then visualizing it with Unity.

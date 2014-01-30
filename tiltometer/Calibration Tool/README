@@ -1,0 +1,20 @@
+================
+Calibration Tool
+================
+==Purpose==
+This set of tools will assist us in debugging the tiltometer, by
+allowing us to read data from the Arduino into the host computer,
+and then visualizing it with Unity.
+
+==Components==
+===ArduinoSerialInterface===
+A .NET project that takes care of requesting data from the Arduino's
+serial port and storing it in a file. Used because Mono requires workarounds
+to get serial port functionality working.
+
+===Calibration Tool===
+A Unity project that contains an object whose orientation is updated
+based upon input from our accelerometer/gyroscope.
+
+===SerialInterfaceSketch===
+The Arduino sketch used to transfer data to the host through the serial port.
