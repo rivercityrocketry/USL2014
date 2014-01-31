@@ -15,6 +15,13 @@ namespace ArduinoSerialInterface
             ArduinoController controller = new ArduinoController();
             controller.OpenArduinoConnection();
             controller.GetDataFromArduinoBoard();
+
+            // Busy wait.
+            while (true)
+            {
+            }
+
+            controller.CloseArduinoConnection();
         }
     }
 }

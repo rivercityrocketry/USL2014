@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO.Ports;
+using System.Diagnostics;
 
 namespace ArduinoSerialInterface
 {
@@ -49,9 +50,10 @@ namespace ArduinoSerialInterface
 
             if (!arduinoBoard.IsOpen)
             {
-                arduinoBoard.DataReceived += arduinoBoard_DataReceived;
-                arduinoBoard.PortName = "COM3";
+                arduinoBoard.PortName = "COM10";
                 arduinoBoard.Open();
+                arduinoBoard.DataReceived += arduinoBoard_DataReceived;
+                arduinoBoard.RtsEnable = true;
             }
             else
             {
@@ -76,15 +78,16 @@ namespace ArduinoSerialInterface
         }
 
         /// <summary>
-        /// Reads  data from the arduinoBoard serial port
+        /// Reads data from the arduinoBoard serial port
         /// </summary>
         void arduinoBoard_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             string data = arduinoBoard.ReadTo("\x03");//Read until the EOT code
 
             DataItems.Add(data);
+            Debug.Print(data);
 
-            if (NewDataReceived != null)//If there is someone waiting for this event to be fired
+            if (NewDataReceived != null)  //If there is someone waiting for this event to be fired
             {
                 NewDataReceived(this, new EventArgs()); //Fire the event, indicating that new WeatherData was added to the list.
             }
