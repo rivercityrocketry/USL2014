@@ -1,0 +1,11 @@
+C:\Users\Daniel\Desktop\USLI\2013-2014\codeRepository\USL2014\tiltometer\Calibration Tool\Calibration Tool\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Daniel\Desktop\USLI\2013-2014\codeRepository\USL2014\tiltometer\Calibration Tool\Calibration Tool\Temp\bin\Debug\Assembly-CSharp.dll
+C:\Users\Daniel\Desktop\USLI\2013-2014\codeRepository\USL2014\tiltometer\Calibration Tool\Calibration Tool\Temp\bin\Debug\Assembly-CSharp.pdb
+C:\Users\Daniel\Desktop\USLI\2013-2014\codeRepository\USL2014\tiltometer\Calibration Tool\Calibration Tool\Temp\bin\Debug\UnityEditor.dll
+C:\Users\Daniel\Desktop\USLI\2013-2014\codeRepository\USL2014\tiltometer\Calibration Tool\Calibration Tool\Temp\bin\Debug\UnityEngine.dll
+C:\Users\Daniel\Desktop\USLI\2013-2014\codeRepository\USL2014\tiltometer\Calibration Tool\Calibration Tool\Temp\bin\Debug\Mono.Cecil.dll
+C:\Users\Daniel\Desktop\USLI\2013-2014\codeRepository\USL2014\tiltometer\Calibration Tool\Calibration Tool\Temp\bin\Debug\nunit.framework.dll
+C:\Users\Daniel\Desktop\USLI\2013-2014\codeRepository\USL2014\tiltometer\Calibration Tool\Calibration Tool\Temp\bin\Debug\Unity.DataContract.dll
+C:\Users\Daniel\Desktop\USLI\2013-2014\codeRepository\USL2014\tiltometer\Calibration Tool\Calibration Tool\Temp\bin\Debug\ICSharpCode.NRefactory.dll
+C:\Users\Daniel\Desktop\USLI\2013-2014\codeRepository\USL2014\tiltometer\Calibration Tool\Calibration Tool\obj\Debug\Assembly-CSharp.dll
+C:\Users\Daniel\Desktop\USLI\2013-2014\codeRepository\USL2014\tiltometer\Calibration Tool\Calibration Tool\obj\Debug\Assembly-CSharp.pdb

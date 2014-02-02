@@ -13,8 +13,11 @@ Written with the official Arduino IDE, AVAILABLE here:
 http://www.arduino.cc/en/Main/software
 
 *******************************************************************/
-/*   INCLUDES                                                     */
+/*   LIBRARIES                                                    */
 #include <WString.h>              // Official Arduino string library
+#include <ADXL345.h>              // Library used to get data from our accelerometer
+#include <Wire.h>
+
 /******************************************************************/
 /*   CONSTANTS                                                    */
 #define LED_TURN_ON_TIMEOUT  1000       //Timeout for LED power time (defines how long the LED stays powered on) in milliseconds
@@ -32,19 +35,29 @@ http://www.arduino.cc/en/Main/software
 //ERRORS
 #define ERR_SERIAL_IN_COMMAND_NOT_TERMINATED -1   //Code is used when a serial input commands' last char is not a '#'
 /******************************************************************/
+/*   GLOBAL VARIABLES                                             */
+ADXL345 accelerometer;
+
+double Xg = 0;
+double Yg = 0;
+double Zg = 0; 
+/******************************************************************/
 /*   METHOD DECLARATIONS                                          */
 void WriteDummyData();
 /******************************************************************/
 /*   METHODS    
 ******************************************************************/
 void setup(){
+  accelerometer.begin();
   pinMode(LED_PIN, OUTPUT);
   Serial.begin(SERIAL_BAUDRATE);  //setup serial pin
 }
 
 void loop(){
-  String command = "";  //Used to store the latest received command
-  int serialResult = 0; //return value for reading operation method on serial in put buffer
+  String command = "";  // Used to store the latest received command
+  int serialResult = 0; // return value for reading operation method on serial in put buffer
+ 
+  accelerometer.read(&Xg, &Yg, &Zg);
   
   WriteDummyData();
 
@@ -78,10 +91,13 @@ Licence: CodeProject Open License [CPOL]
 ******************************************************************/
 void WriteDummyData(){
   Serial.print(STX);
-  Serial.print("[0.1,0.5,-0.3]");
+  Serial.print("[");
+  Serial.print(Xg);
+  Serial.print(",");
+  Serial.print(Yg);
+  Serial.print(",");
+  Serial.print(Zg);
+  Serial.print("]");
   Serial.print(RS);
-  Serial.print("[0.3,0.1,-2.3]");
-  Serial.print(RS);
-  Serial.print("[0.6,5,-56.3]");
- Serial.print(ETX);
+  Serial.print(ETX);
 }

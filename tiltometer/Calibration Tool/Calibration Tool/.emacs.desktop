@@ -1,0 +1,62 @@
+;; -*- mode: emacs-lisp; coding: emacs-mule; -*-
+;; --------------------------------------------------------------------------
+;; Desktop File for Emacs
+;; --------------------------------------------------------------------------
+;; Created Sat Feb 01 16:36:46 2014
+;; Desktop file format version 206
+;; Emacs version 24.1.1
+
+;; Global section:
+(setq desktop-missing-file-warning nil)
+(setq tags-file-name nil)
+(setq tags-table-list nil)
+(setq search-ring '("acc"))
+(setq regexp-search-ring nil)
+(setq register-alist nil)
+(setq file-name-history '("c:/Users/Daniel/Desktop/USLI/2013-2014/codeRepository/USL2014/tiltometer/Calibration Tool/Calibration Tool/" "c:/Users/Daniel/Desktop/USLI/2013-2014/codeRepository/USL2014/tiltometer/Calibration Tool/Calibration Tool/log.txt" "c:/Users/Daniel/Desktop/USLI/2013-2014/codeRepository/USL2014/tiltometer/Calibration Tool/Calibration Tool/notes.org" "c:/Users/Daniel/Desktop/USLI/2013-2014/codeRepository/USL2014/tiltometer/Calibration Tool/Calibration Tool/log.txt" "c:/Users/Daniel/Desktop/USLI/2013-2014/codeRepository/USL2014/tiltometer/MPU6050_IMU/README.md" "c:/Users/Daniel/.emacs"))
+
+;; Buffer section -- buffers listed in same order as in buffer list:
+(desktop-create-buffer 206
+  "c:/Users/Daniel/Desktop/USLI/2013-2014/codeRepository/USL2014/tiltometer/Calibration Tool/Calibration Tool/notes.org"
+  "notes.org"
+  'org-mode
+  nil
+  691
+  '(916 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . iso-latin-1-dos) (truncate-lines . t)))
+
+(desktop-create-buffer 206
+  "c:/Users/Daniel/Desktop/USLI/2013-2014/codeRepository/USL2014/tiltometer/Calibration Tool/Calibration Tool/log.txt"
+  "log.txt"
+  'text-mode
+  nil
+  1
+  '(12499 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-dos)))
+
+(desktop-create-buffer 206
+  "c:/Users/Daniel/Desktop/USLI/2013-2014/codeRepository/USL2014/tiltometer/MPU6050_IMU/README.md"
+  "README.md"
+  'fundamental-mode
+  nil
+  1
+  '(1 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . iso-latin-1-dos)))
+
+(desktop-create-buffer 206
+  "c:/Users/Daniel/.emacs"
+  ".emacs"
+  'emacs-lisp-mode
+  nil
+  1
+  '(nil nil)
+  nil
+  nil
+  '((buffer-file-coding-system . undecided-dos)))
+

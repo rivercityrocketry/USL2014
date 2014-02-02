@@ -24,39 +24,48 @@ void setup()
  
 void loop()
 {
-  int altitudeReading = analogRead(ALTIMETER_PIN);
+//  int altitudeReading = analogRead(ALTIMETER_PIN);
   
-  Serial.println(altitudeReading);
+//  Serial.println(altitudeReading);
   
-  if (altitudeReading >= 660 && altitudeReading <= 680) {
-    Serial.println("Altitude detected!");
+//  if (altitudeReading >= 660 && altitudeReading <= 680) {
+//    Serial.println("Altitude detected!");
     
     double pitch, roll, Xg, Yg, Zg;
     acc.read(&Xg, &Yg, &Zg);
- 
+    
+    Serial.print("[");
+    Serial.print(Xg);
+    Serial.print(",");
+    Serial.print(Yg);
+    Serial.print(",");
+    Serial.print(Zg);
+    Serial.print("]");
+    Serial.println();
+    
     //Low Pass Filter
-    fXg = Xg * alpha + (fXg * (1.0 - alpha));
-    fYg = Yg * alpha + (fYg * (1.0 - alpha));
-    fZg = Zg * alpha + (fZg * (1.0 - alpha));
+//    fXg = Xg * alpha + (fXg * (1.0 - alpha));
+//    fYg = Yg * alpha + (fYg * (1.0 - alpha));
+//    fZg = Zg * alpha + (fZg * (1.0 - alpha));
  
     //Roll & Pitch Equations
-    roll  = (atan2(-fYg, fZg)*180.0)/M_PI;
-    pitch = (atan2(fXg, sqrt(fYg*fYg + fZg*fZg))*180.0)/M_PI;
+//    roll  = (atan2(-fYg, fZg)*180.0)/M_PI;
+//    pitch = (atan2(fXg, sqrt(fYg*fYg + fZg*fZg))*180.0)/M_PI;
  
-    Serial.print(pitch);
-    Serial.print(":");
-    Serial.println(roll);
+//    Serial.print(pitch);
+//    Serial.print(":");
+//    Serial.println(roll);
 
-    if (fXg >= XTHRESHOLD ||
+/*    if (fXg >= XTHRESHOLD ||
         fYg >= YTHRESHOLD ||
         fZg >= ZTHRESHOLD) {
       FireSecondaryMotor();
       return;
     }
-        
-    delay(1000);
+*/        
+    delay(1500);
 //    Serial.println(analogRead(ALTIMETER_PIN));
-  }
+//  }
  
 }
 

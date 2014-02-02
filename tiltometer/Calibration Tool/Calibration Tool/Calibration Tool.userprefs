@@ -1,0 +1,13 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\UpdateCubeProperties.cs">
+    <Files>
+      <File FileName="Assets\UpdateCubeProperties.cs" Line="48" Column="1" />
+      <File FileName="c:\Users\Daniel\Desktop\USLI\2013-2014\codeRepository\USL2014\tiltometer\Calibration Tool\Calibration Tool\Assets\SimulationUpdater.cs" Line="13" Column="20" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

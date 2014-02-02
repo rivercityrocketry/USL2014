@@ -1,0 +1,27 @@
+* Notes for this project:
+** Accelerometer info:
+*** Sensitivity [based upon the selected range]:
+**** AFS_SEL=0: 16,384 LSB/g
+**** AFS_SEL=1: 8,192  LSB/g
+**** AFS_SEL=2: 4,096  LSB/g
+**** AFS_SEL=3: 2,048  LSB/g
+*** Reference voltage:
+**** 1.8V +/- 5%
+**** Referred to as VLOGIC in the data sheet.
+*** Zero-g outputs:
+**** X-axis: +/- 50 milli-g
+**** Y-axis: +/- 50 milli-g
+**** Z-axis: +/- 80 milli-g
+** Pin connections
+*** I'm using the pin connection setup mentioned by some guy on the SparkFun product page at https://www.sparkfun.com/products/11028
+*** Connections:
+**** VDD   - Arduino 3.3v
+**** GND   - Arduino GND
+**** INT   - Arduino digital pin 2
+**** FSYNC - leave unconnected
+**** SCL   - Arduino SCL (dedicated pin or Analog 5)
+**** SDA   - Arduino SDA (dedicated pin or Analog 4)
+**** VIO   - Arduino 3.3v
+**** CLK   - leave unconnected
+**** ASCL  - leave unconnected
+**** ASDA  - leave unconnected

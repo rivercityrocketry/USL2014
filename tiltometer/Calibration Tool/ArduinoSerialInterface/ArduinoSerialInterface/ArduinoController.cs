@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.IO.Ports;
 using System.Diagnostics;
+using System.IO;
+using System.Windows.Forms;
 
 namespace ArduinoSerialInterface
 {
@@ -19,6 +21,10 @@ namespace ArduinoSerialInterface
 
         public event EventHandler NewDataReceived;
 
+        private const char ENTRY_SEPARATOR = '$';
+
+        private frmStartup MainForm;
+
         /// <summary>
         /// Closes the connection to an Arduino Board.
         /// </summary>
@@ -29,24 +35,9 @@ namespace ArduinoSerialInterface
         /// <summary>
         /// Opens the connection to an Arduino board
         /// </summary>
-        public void OpenArduinoConnection()
+        public void OpenArduinoConnection(frmStartup mainForm)
         {
-            //WeatherDataItem item = new WeatherDataItem();
-            //item.Date = DateTime.Now;
-            //item.TemparatureCelsius = (float)5.5;
-            //DataItems.Add(item);
-            //item = new WeatherDataItem();
-            //item.Date = DateTime.Now;
-            //item.TemparatureCelsius = (float)10;
-            //DataItems.Add(item);
-            //item = new WeatherDataItem();
-            //item.Date = DateTime.Now;
-            //item.TemparatureCelsius = (float)11.3;
-            //DataItems.Add(item);
-            //item = new WeatherDataItem();
-            //item.Date = DateTime.Now;
-            //item.TemparatureCelsius = (float)8.55;
-            //DataItems.Add(item);
+            this.MainForm = mainForm;
 
             if (!arduinoBoard.IsOpen)
             {
@@ -82,15 +73,28 @@ namespace ArduinoSerialInterface
         /// </summary>
         void arduinoBoard_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            string data = arduinoBoard.ReadTo("\x03");//Read until the EOT code
-
-            DataItems.Add(data);
-            Debug.Print(data);
-
-            if (NewDataReceived != null)  //If there is someone waiting for this event to be fired
+            try
             {
-                NewDataReceived(this, new EventArgs()); //Fire the event, indicating that new WeatherData was added to the list.
+                if (arduinoBoard.IsOpen)
+                {
+                    string data = arduinoBoard.ReadTo(Environment.NewLine); //Read until the end of message code
+                    string[] entries = data.Split(ENTRY_SEPARATOR);
+
+                    if (NewDataReceived != null)  //If there is someone waiting for this event to be fired
+                    {
+                        NewDataReceived(this, new EventArgs()); //Fire the event, indicating that new WeatherData was added to the list.
+                    }
+
+                    foreach (string entry in entries)
+                    {
+                        MainForm.dataEntries.Add(entry);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
             }
         }
     }
 }
+
