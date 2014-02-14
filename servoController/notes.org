@@ -1,0 +1,20 @@
+* This directory contains the code needed to control the servo which
+detaches the parachute from the rover upon landing.
+* The code uses the Adafruit BeagleBone I/O library.
+Setup instructions are at: http://learn.adafruit.com/setting-up-io-python-library-on-beaglebone-black/
+* The code is also based upon an Adafruit tutorial for controlling a
+servo, found at here: http://learn.adafruit.com/controlling-a-servo-with-a-beaglebone-black/
+* TODO If we encounter any exceptions in the PWM code, we need to perform a
+PWM.stop() and a PWM.cleanup() if we've already started.
+* TODO Add to our pre-launch procedures to make sure the servo is wound
+in the proper direction.
+* WIRING SETUP:
+| Servo wire | BeagleBone pin | Pin name |
+| Black      | P8_02          | DGND     |
+| Red        | P9_06          | VDD_5V   |
+| Yellow     | P8_13          | GPIO_23  |
+* PUTTING IT TOGETHER
+** 1) Boot the beagle board.
+** 2) Plug in the wires.
+** 3) Make sure the servo is rotated as far COUNTER-CLOCKWISE as possible.
+** 4) Run any programs that use the servo.
