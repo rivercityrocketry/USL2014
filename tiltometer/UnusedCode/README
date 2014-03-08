@@ -1,0 +1,6 @@
+This directory contains previous progress that we're not using now.
+
+MainSketch is a previous attempt to manually convert the raw readings from
+    the sensor into a usable form
+MPU6050_IMU is the source code for the library we're using, which I was
+    playing around with previously.

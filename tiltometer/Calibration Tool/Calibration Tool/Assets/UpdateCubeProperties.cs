@@ -3,76 +3,78 @@ using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System;
+using System.IO.Ports;
 using System.Linq;
 using System.Timers;
 
 public class UpdateCubeProperties : MonoBehaviour {
 
 	private const string IN_FILE_PATH = "C:\\Users\\Daniel\\Desktop\\USLI\\2013-2014\\codeRepository\\USL2014\\tiltometer\\Calibration Tool\\Calibration Tool\\log.txt";
+	private const int BAUD_RATE = 115200;
 
-	private float currentAccelX;
-	private float currentAccelY;
-	private float currentAccelZ;
-	private bool animationPlayed = false;
-	private AssemblyCSharp.Server Server;
+	private string mostRecentReading = "";
 
-	Timer timer = new Timer(2000);
+	private SerialPort SerialStream;
+
+	private Vector3 previousAngles = Vector3.zero;
 
 	// Use this for initialization
 	void Start () {
-		Application.targetFrameRate = 1;
-
-		timer.Elapsed += new ElapsedEventHandler(timer_Elapsed);
-		timer.Enabled = true;
-		timer.Start();
-
-		this.Server = new AssemblyCSharp.Server();
-
 		EditorApplication.playmodeStateChanged = HandleOnPlayModeChanged;
+
+		SerialStream = new SerialPort("\\\\.\\COM10", BAUD_RATE);
+	//	SerialStream.Handshake = Handshake.RequestToSend;
+	//	SerialStream.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
+		SerialStream.Open();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		this.transform.Rotate(new Vector3(currentAccelX, currentAccelY, currentAccelZ));
-	}
+		try {
+			if (SerialStream != null && SerialStream.IsOpen) {
+    			string text = SerialStream.ReadLine();
+				float xrot, yrot, zrot;
 
-	void timer_Elapsed(object sender, ElapsedEventArgs e) {
-		if (animationPlayed) {
-			currentAccelX = 0.0f;
-			currentAccelY = 0.0f;
-			currentAccelZ = 0.0f;
-		}
-		else {
-			animationPlayed = true;
+				if (text.Length >= "euler\t".Length && text.StartsWith("euler")) {
+    				text = text.Substring("euler\t".Length);
 
-			string[] lines = File.ReadAllLines(IN_FILE_PATH);
+			    	string[] components = text.Split(new char[]{'\t'});
+	
+					if (   components.Length == 3
+				    	&& float.TryParse(components[0], out yrot)
+				    	&& float.TryParse(components[1], out zrot)
+				    	&& float.TryParse(components[2], out xrot)) {
 
-			foreach (string line in lines) {
-				if (line != "") {
-					Debug.Log(line);
-
-					string data = line.Substring(1, line.Length - 3);
-					string[] dataComponents = data.Split(',');
-
-					if (dataComponents.Count() > 0) {
-						currentAccelX = float.Parse(dataComponents[0]);
-						currentAccelY = float.Parse(dataComponents[1]);
-						currentAccelZ = float.Parse(dataComponents[2]);
-	//					float gyroX  = float.Parse(dataComponents[3]);
-						//					float gyroY  = float.Parse(dataComponents[4]);
-						//float gyroZ  = float.Parse(dataComponents[5]);
-						Debug.Log("Got the components");
-						Debug.Log("Accel: [" + currentAccelX + "," + currentAccelY + "," + currentAccelZ + "]");
-						//Debug.Log("Gyro: [" + gyroX + "," + gyroY + "," + gyroZ + "]");
+						Vector3 mostRecentOrientation = new Vector3(xrot, yrot, zrot);
+						mostRecentOrientation += new Vector3(180.0f, 180.0f, 180.0f);
+						mostRecentReading = mostRecentOrientation.ToString();
+						transform.eulerAngles = mostRecentOrientation;
+						//transform.eulerAngles = new Vector3(xrot, yrot, zrot);
+/*
+						transform.Rotate(new Vector3((xrot - previousAngles.x),
+						                             (yrot - previousAngles.y), 
+						                             (zrot - previousAngles.z)));*/
+				
+						//previousAngles = new Vector3(xrot, yrot, zrot);
 					}
 				}
+				else {
+			    	if (SerialStream != null && !SerialStream.IsOpen) {
+				    	SerialStream.Close();
+					    EditorApplication.isPlaying = false;
+				    }
+			    }
 			}
-		}
+	    }
+ 	    catch (Exception ex) {
+		    Debug.Log(ex.ToString());
+	    }
+    }
 
-		// Delete all the data from the file that we read in.
-		Debug.Log("Before deletion");
-		File.Delete(IN_FILE_PATH);
-		Debug.Log("File deleted");
+	void OnGUI() {
+		GUI.Label(new Rect(10,0,300,100), "Most recent reading: " + mostRecentReading);
+		GUI.Label(new Rect(10,70,300,100), "Actual: " + transform.localEulerAngles.ToString());
 	}
 
 	/// <summary>
@@ -81,11 +83,37 @@ public class UpdateCubeProperties : MonoBehaviour {
 	void HandleOnPlayModeChanged()
 	{
 		// Check if the editor is not playing or paused (=> we're not editing).
-		if (!EditorApplication.isPaused && !EditorApplication.isPlaying)
+		if (!EditorApplication.isPaused && !EditorApplication.isPlaying && SerialStream != null)
 		{
-			timer.Stop();
-			timer.Dispose();
-			this.Server.Close();
+			SerialStream.Close();
 		}
 	}
+
+/*	private void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e) {
+		if (SerialStream.IsOpen) {
+			string text = SerialStream.ReadLine();
+			float xrot, yrot, zrot;
+			
+			text = text.Substring("ypr ".Length);
+			
+			string[] components = text.Split(new char[]{'\t'});
+			
+			if (   components.Length == 3 
+			    && float.TryParse(components[0], out xrot)
+			    && float.TryParse(components[1], out yrot)
+			    && float.TryParse(components[2], out zrot)) {
+				
+				transform.Rotate(new Vector3((xrot - previousAngles.x),
+				                             (yrot - previousAngles.y), 
+				                             (zrot - previousAngles.z)));
+				previousAngles = new Vector3(xrot, yrot, zrot);
+			}
+		}
+		else {
+			SerialStream.Close();
+		}
+		/*string indata = sp.ReadExisting();
+		Console.WriteLine("Data Received:");
+		Console.Write(indata);*/
+	//}
 }
