@@ -1,0 +1,21 @@
+This directory contains the code needed to control the servo which
+detaches the parachute from the rover upon landing.
+
+The code uses the Adafruit BeagleBone I/O library.
+Setup instructions are at: http://learn.adafruit.com/setting-up-io-python-library-on-beaglebone-black/
+
+The code is also based upon an Adafruit tutorial for controlling a
+servo, found at here: http://learn.adafruit.com/controlling-a-servo-with-a-beaglebone-black/
+
+
+
+* TODO For some reason, after I installed the Adafruit library, it wasn't
+available the next time after I rebooted.
+* TODO We need to write a script to export the correct GPIO pin, so that it's
+usable through the GPRS cape.
+* TODO If we encounter any exceptions in the PWM code, we need to perform a
+PWM.stop() and a PWM.cleanup() if we've already started.
+* TODO Document our pin configuration and the sequence of setup steps we
+need to take.
+* TODO Add to our pre-launch procedures to make sure the servo is wound
+in the proper direction.

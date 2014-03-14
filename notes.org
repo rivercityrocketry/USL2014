@@ -1,0 +1,9 @@
+* GPS unit conversions:
+** Example of raw data we receive from the device:
+*** 3816.1754N, 08541.9944W
+*** N = +, S = -
+*** E = +, W = -
+** This converts into the following DMM value:
+*** Lat: 38.161754, Long: -085.419907
+** Which in turn converts into:
+*** +38° 9' 42.3144", -85° 25' 11.6646" lat, long
