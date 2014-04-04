@@ -44,8 +44,9 @@ THE SOFTWARE.
 // I2Cdev and MPU6050 must be installed as libraries, or else the .cpp/.h files
 // for both classes must be in the include path of your project
 #include "I2Cdev.h"
-
+#include "Time.h"
 #include "MPU6050_6Axis_MotionApps20.h"
+#include <SD.h>
 //#include "MPU6050.h" // not necessary if using MotionApps include file
 
 // Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
@@ -78,8 +79,6 @@ MPU6050 mpu;
    http://arduino.cc/forum/index.php/topic,109987.0.html
    http://code.google.com/p/arduino/issues/detail?id=958
  * ========================================================================= */
-
-
 
 // uncomment "OUTPUT_READABLE_QUATERNION" if you want to see the actual
 // quaternion components in a [w, x, y, z] format (not best for parsing
@@ -141,7 +140,36 @@ float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gra
 // packet structure for InvenSense teapot demo
 uint8_t teapotPacket[14] = { '$', 0x02, 0,0, 0,0, 0,0, 0,0, 0x00, 0x00, '\r', '\n' };
 
+// Whether or not the initial value offsets have been set for the sensor.
+bool offsetsHaveBeenSet = false;
+bool readyToSetOffsets = false;
 
+// The concrete values of each of our reading offsets.
+float readingOffsetsX = 0.0f;
+float readingOffsetsY = 0.0f;
+float readingOffsetsZ = 0.0f;
+
+// Data readings at times N, N-1, and N-2. N = the current
+// time, N-1 = the second most-recent reading, etc.
+float X_N, X_N_1, X_N_2 = 0.0f;
+
+// TODO Add a descriptive comment explaining how the whole del2,
+//      etc process is actually working in the code.
+// Deltas between the most recent readings.
+float del1, del2, del3 = 0.0f;
+float maxDelX, nearestToMaxDelX = 0.0f;
+
+int numberOfReadings = 0;
+
+int pushButtonValue = 2;
+
+void getAccelerationAngle(float *xAngle, float *yAngle, float *zAngle);
+
+File logFile;
+const int CHIP_SELECT_PIN = 10;
+int Read = 1;
+
+int currentReadingNumber = 0;
 
 // ================================================================
 // ===               INTERRUPT DETECTION ROUTINE                ===
@@ -231,7 +259,22 @@ void setup() {
     }
 
     // configure LED for output
-    pinMode(LED_PIN, OUTPUT);
+//    pinMode(LED_PIN, OUTPUT);
+//    pinMode(RESET_BUTTON_PIN, INPUT);
+
+    Serial.print("Initializing SD card...");
+    // On the Ethernet Shield, CS is pin 4. It's set as an output by default.
+    // Note that even if it's not used as the CS pin, the hardware SS pin 
+    // (10 on most Arduino boards, 53 on the Mega) must be left as an output 
+    // or the SD library functions will not work. 
+    pinMode(CHIP_SELECT_PIN, OUTPUT);
+ 
+    if (!SD.begin(10)) {
+        Serial.println("initialization failed!");
+        return;
+    }
+    Serial.println("SD initialization done.");
+    Serial.println("Calibrating device offsets...");
 }
 
 
@@ -300,12 +343,80 @@ void loop() {
             // display Euler angles in degrees
             mpu.dmpGetQuaternion(&q, fifoBuffer);
             mpu.dmpGetEuler(euler, &q);
-            Serial.print("euler\t");
-            Serial.print(euler[0] * 180/M_PI);
+
+            if (readyToSetOffsets) {
+                // We can't set the offsets immediately after
+                // the delay, because of a FIFO overflow, so we
+                // have to set the offsets at the next reading.
+                offsetsHaveBeenSet = true;
+                readingOffsetsX = euler[0];
+                readingOffsetsY = euler[1];
+                readingOffsetsZ = euler[2];
+                
+                // TODO Here, rather than making the offsets be the angle
+                //      on launch pad, we need to get the angle of the
+                //      acceleration we see [gravity]. This is because we'll
+                //      have problems if the launchpad is angled off-center.
+                Serial.print("Device offsets set: [");
+                Serial.print(readingOffsetsX);
+                Serial.print(",");
+                Serial.print(readingOffsetsY);
+                Serial.print(",");
+                Serial.print(readingOffsetsZ);
+                Serial.println("]");
+                
+                float eulerAngles[3];
+                
+                Serial.print("Angle of gravity WRT us is: [");
+                Serial.print(eulerAngles[0]);
+                Serial.print(",");
+                Serial.print(eulerAngles[1]);
+                Serial.print(",");
+                Serial.print(eulerAngles[2]);
+                Serial.println("]");
+
+                // TODO This is a very hacky way of setting the offsets.
+                //      Needs documentation, code cleanup.
+                readyToSetOffsets = false; 
+            }
+            
+            if (offsetsHaveBeenSet) {
+                 // TODO Should I be using the built-in offset-setting functions rather than manually subtractin here?
+                 euler[0] -= readingOffsetsX;
+                 euler[1] -= readingOffsetsY;
+                 euler[2] -= readingOffsetsZ;
+            } else {
+                // TODO Make this whole process a function call?
+                // Wait a large number of readings for values to stabilize
+                if (numberOfReadings > 3000) {
+                    readyToSetOffsets = true;
+                }
+                numberOfReadings++;
+            }
+            
+            Serial.print("Acceleration angles\t");
+            Serial.print(euler[0]   * 180/M_PI);
             Serial.print("\t");
-            Serial.print(euler[1] * 180/M_PI);
+            Serial.print(euler[1]   * 180/M_PI);
             Serial.print("\t");
             Serial.println(euler[2] * 180/M_PI);
+
+            // Write out the current angle state every <angleReadingNumber> readings.
+/*            if (currentReadingNumber >= 10)
+            {
+                writeSD(String((int)(euler[0] * 180/M_PI)) + "\t"
+                      + String((int)(euler[1] * 180/M_PI)) + "\t"
+                      + String((int)(euler[2] * 180/M_PI)));
+                currentReadingNumber = 0;
+            } */
+            if (Read == 1)
+            {
+                //reads data from SD Card
+                readSD(); 
+                Read = 0;
+            }
+            
+            currentReadingNumber++;
         #endif
 
         #ifdef OUTPUT_READABLE_YAWPITCHROLL
@@ -366,7 +477,53 @@ void loop() {
         #endif
 
         // blink LED to indicate activity
-        blinkState = !blinkState;
-        digitalWrite(LED_PIN, blinkState);
+//        blinkState = !blinkState;
+//        digitalWrite(LED_PIN, blinkState);
+    }
+}
+
+void writeSD(String message)
+{
+  // open the file. Note that only one file can be open at a time,
+  // so you have to close this one before opening another.
+  logFile = SD.open("Data.txt", FILE_WRITE);
+
+  // if the file opened okay, write to it:
+  if (logFile)
+  {
+      Serial.print("Writing to file...");
+      logFile.println(message);
+
+      // close the file:
+      logFile.close();
+      Serial.println("done.");
+  } 
+  else 
+  {
+      // if the file didn't open, print an error:
+      Serial.println("error opening file");
+      logFile.close();
+  }
+}
+
+void readSD() {
+    logFile = SD.open("Data.txt");
+    if (logFile)
+    {
+        Serial.println("Reading file...");
+        // read from the file until there's nothing else in it:
+        while (logFile.available()) 
+        {
+            Serial.write(logFile.read());
+        }
+        // close the file:
+        logFile.close();
+        Serial.println("Finished reading file...");
+    } 
+    else 
+    {
+        // if the file didn't open, print an error:
+        Serial.print("error opening ");
+        Serial.println("Data.txt");
     }
 }
