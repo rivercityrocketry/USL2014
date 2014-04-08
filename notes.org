@@ -6,4 +6,14 @@
 ** This converts into the following DMM value:
 *** Lat: 38.161754, Long: -085.419907
 ** Which in turn converts into:
-*** +38° 9' 42.3144", -85° 25' 11.6646" lat, long
+*** +38° 16.1754', -85° 41.9907' lat, long
+
+
+Latitude: ddmm.mmmm
+Longitude: dddmm.mmmm
+
+38.144210N
+085.442847W
+
+38.146972N
+085.443460W

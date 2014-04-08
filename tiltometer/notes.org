@@ -38,13 +38,59 @@
 ** Pin connections
 *** I'm using the pin connection setup mentioned by some guy on the SparkFun product page at https://www.sparkfun.com/products/11028
 *** Connections:
-**** VDD   - Arduino 3.3v
-**** GND   - Arduino GND
-**** INT   - Arduino digital pin 2
-**** FSYNC - leave unconnected
-**** SCL   - Arduino SCL (dedicated pin or Analog 5)
-**** SDA   - Arduino SDA (dedicated pin or Analog 4)
-**** VIO   - Arduino 3.3v
-**** CLK   - leave unconnected
-**** ASCL  - leave unconnected
-**** ASDA  - leave unconnected
+**** MPU6050 connections:
+***** VDD   - Arduino 3.3v
+***** GND   - Arduino GND
+***** INT   - Arduino digital pin 2
+***** FSYNC - leave unconnected
+***** SCL   - Arduino SCL (dedicated pin or Analog 5)
+***** SDA   - Arduino SDA (dedicated pin or Analog 4)
+***** VIO   - Arduino 3.3v
+***** CLK   - leave unconnected
+***** ASCL  - leave unconnected
+***** ASDA  - leave unconnected
+**** Seeed SD shield connections:
+| Arduino pin | Seeed pin |
+| 5V          | 5V        |
+| GND         | GND       |
+| D11         | D11       |
+| D10         | D10       |
+| D12         | D12       |
+| D13         | D13       |
+**** If you want an LED to light when the launch angle is not safe: Arduino digital 12 = LED pin.
+**** The push-button should be setup according to the steps at: http://www.instructables.com/id/How-to-use-a-push-button-switch-with-arduino/
+* TODO List
+** Items to complete: [0/9]
+*** TODO I need to properly calculate my gyro and accelerometer sensitivity and similar values. That could be causing the weird Z angles I've been seeing.
+*** TODO Get the logic for subtracting out the most outlying last few readings working.
+*** TODO Figure out which angle is pointing up relative to the rocket.
+*** TODO Hook up an LED. When angle between the axis > 20 degrees, light LED. Else, don't light it.
+**** TODO Set up an experiment where we put the tiltometer on a flat surface. Get a protractor, and measure its angle when the LED lights. Take photos to include in FRR.
+*** TODO Complete all the TODO items listed in the source code.
+*** TODO Add a post-launchpad entry to the checklist to determine the time of launch based on a standard time, using the device that recorded the time.
+*** TODO Add an entry/page to the wiki for all items to be completed prior to FRR.
+*** TODO Do more extensive drift testing. Leave it on overnight with a delay() in the loop, etc. Counteract any drift we see.
+*** TODO WAITING Log the current time, current orientation estimate, and whether or not it's safe to launch.
+**** WAITING: Waiting for the SD card breakout board that Carlos ordered to come
+     in. The code is almost all in place in the FinalSketch file.
+     Search for: "Data to log
+*** TODO Get the calibration setup from the reset button working.
+** Done items [3/3]
+*** DONE Preliminary drift test.
+*** DONE Get the angle detection working.
+*** DONE We'll need to find a way of logging when we received the signal to launch.
+ We can probably log acceleration as well as we ascend, and check for a  gigantic spike.
+**** SOLUTION Justin's side can record when the Raven fired, so we can correlate that with our note of launch time.
+* Data Logging
+** Pinout [for the black board by Seeed Studio]:
+| Arduino pin | Seeed pin |
+| 5V          | 5V        |
+| GND         | GND       |
+| D10         | D10       |
+| D11         | D11       |
+| D12         | D12       |
+| D13         | D13       |
+CS=D10 Seeed
+MOSI=D11 Seeed = Arduino 11
+MISO=D12 Seeed = Arduino 12
+SCK=D13 Seeed  = Arduino 13

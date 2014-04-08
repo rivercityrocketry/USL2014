@@ -14,7 +14,7 @@
 //                 - add 3D math helper file to DMP6 example sketch
 //                 - add Euler output and Yaw/Pitch/Roll output formats
 //      2012-06-04 - remove accel offset clearing for better results (thanks Sungon Lee)
-//      2012-06-01 - fixed gyro sensitivity to be 2000 deg/sec instead of 250
+//      2012-06-01 - fixed gyro sensitcivity to be 2000 deg/sec instead of 250
 //      2012-05-30 - basic DMP initialization working
 
 /* ============================================
@@ -166,11 +166,10 @@ int pushButtonValue = 2;
 void getAccelerationAngle(float *xAngle, float *yAngle, float *zAngle);
 
 File logFile;
-const int CHIP_SELECT_PIN = 10;
+const int CHIP_SELECT_PIN = 1;
 int Read = 1;
 
 int currentReadingNumber = 0;
-
 // ================================================================
 // ===               INTERRUPT DETECTION ROUTINE                ===
 // ================================================================
@@ -179,8 +178,6 @@ volatile bool mpuInterrupt = false;     // indicates whether MPU interrupt pin h
 void dmpDataReady() {
     mpuInterrupt = true;
 }
-
-
 
 // ================================================================
 // ===                      INITIAL SETUP                       ===
@@ -216,10 +213,7 @@ void setup() {
     Serial.println(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
 
     // wait for ready
-    Serial.println(F("\nSend any character to begin DMP programming and demo: "));
     while (Serial.available() && Serial.read()); // empty buffer
-    while (!Serial.available());                 // wait for data
-    while (Serial.available() && Serial.read()); // empty buffer again
 
     // load and configure the DMP
     Serial.println(F("Initializing DMP..."));
@@ -380,12 +374,17 @@ void loop() {
                 readyToSetOffsets = false; 
             }
             
+            if (Math.abs(euler[0] * 180/M_PI) >= 40) {
+                status
+            }
+            
             if (offsetsHaveBeenSet) {
                  // TODO Should I be using the built-in offset-setting functions rather than manually subtractin here?
                  euler[0] -= readingOffsetsX;
                  euler[1] -= readingOffsetsY;
                  euler[2] -= readingOffsetsZ;
             } else {
+             
                 // TODO Make this whole process a function call?
                 // Wait a large number of readings for values to stabilize
                 if (numberOfReadings > 3000) {
@@ -407,14 +406,14 @@ void loop() {
                 writeSD(String((int)(euler[0] * 180/M_PI)) + "\t"
                       + String((int)(euler[1] * 180/M_PI)) + "\t"
                       + String((int)(euler[2] * 180/M_PI)));
-                currentReadingNumber = 0;
-            } */
-            if (Read == 1)
+                currentReadingNumber = 0; */
+//            } */
+/*            if (Read == 1)
             {
                 //reads data from SD Card
                 readSD(); 
                 Read = 0;
-            }
+            } */
             
             currentReadingNumber++;
         #endif

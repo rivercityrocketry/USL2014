@@ -24,32 +24,30 @@ void setup()
     return;
   }
   Serial.println("initialization done.");
- 
-  
 }
  
 void loop()
 {
-  while (angleX <= 3)
-  {
-    angleX += 1;
-    angleY += 2;
-    angleZ += 3;
-    //writes data to SD Card
-    writeSD(String(String(angleX) + "\t" + angleY + "\t" + angleZ));
-  }
+    while (angleX <= 3)
+    {
+        angleX += 1;
+        angleY += 2;
+        angleZ += 3;
+        //writes data to SD Card
+        writeSD(String(String(angleX) + "\t" + angleY + "\t" + angleZ));
+    }
 
-  if (Read == 1)  
-  {
-    //reads data from SD Card
-    readSD(); 
-    Read = 0;
-  }
+    if (Read == 1)  
+    {
+        //reads data from SD Card
+        readSD(); 
+        Read = 0;
+    }
 }
 
 void writeSD(String message)
 {
-  // open the file. note that only one file can be open at a time,
+  // open the file. Note that only one file can be open at a time,
   // so you have to close this one before opening another.
   myFile = SD.open("Data.txt", FILE_WRITE);
 
